@@ -1,0 +1,80 @@
+version: '3.7'
+services:
+    pizza_bd:
+        image: mysql:5.7.31
+        container_name: ${CONTAINER_REGISTRY_BASE}_bd
+        build:
+            target: ${CONTAINER_REGISTRY_BASE}_bd
+            context: bd
+        env_file:
+            - ./.env
+        ports:
+            - "21020:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DATABASE_NAME_SYSTEM}
+            MYSQL_USER: ${DATABASE_USER_SYSTEM}
+            MYSQL_PASSWORD: ${DATABASE_PASS_SYSTEM}
+        networks:
+            - pizza-network
+
+    pizza_php7:
+        image: ${CONTAINER_REGISTRY_BASE}/php7-fpm
+        user: $UID:$GID
+        stdin_open: true
+        container_name: ${CONTAINER_REGISTRY_BASE}_php7
+        build:
+            target: pizza_php-fpm
+            context: php7-fpm
+            args:
+                TIMEZONE: ${TIMEZONE}
+        env_file:
+            - ./.env
+        volumes:
+            - ${DIRECTORY_WEB}:/var/www/html
+            - /etc/group:/etc/group:ro
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/shadow:/etc/shadow:ro
+            - /home/${USER}:/home/${USER}
+            - var:/var/www/html/var/cache
+            - var:/var/www/html/var/logs
+            - var:/var/www/html/var/spool
+            - var:/var/www/html/var/sessions
+        links:
+            - pizza_bd
+        depends_on:
+            - pizza_bd
+        tty: true
+        networks:
+            - pizza-network
+
+    pizza_apache:
+        image: ${CONTAINER_REGISTRY_BASE}/apache_php7
+        container_name: ${CONTAINER_REGISTRY_BASE}_apache
+        env_file:
+            - ./.env
+        build:
+            context: apache
+            target: pizza_apache
+        links:
+            - pizza_php7
+        depends_on:
+            - pizza_php7
+        restart: always
+        volumes:
+            - ${DIRECTORY_WEB}:/var/www/html
+        ports:
+            - "21019:80"
+        networks:
+            - pizza-network
+#Docker Networks
+networks:
+    pizza-network:
+        driver: bridge
+
+#Volumes
+volumes:
+    pizza-var:
+        driver_opts:
+            type: tmpfs
+            device: tmpfs
