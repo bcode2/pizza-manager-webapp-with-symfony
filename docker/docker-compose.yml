@@ -36,10 +36,10 @@ services:
             - /etc/passwd:/etc/passwd:ro
             - /etc/shadow:/etc/shadow:ro
             - /home/${USER}:/home/${USER}
-            - var:/var/www/html/var/cache
-            - var:/var/www/html/var/logs
-            - var:/var/www/html/var/spool
-            - var:/var/www/html/var/sessions
+            - pizza-var:/var/www/html/var/cache
+            - pizza-var:/var/www/html/var/logs
+            - pizza-var:/var/www/html/var/spool
+            - pizza-var:/var/www/html/var/sessions
         links:
             - pizza_bd
         depends_on:
