@@ -87,41 +87,18 @@ class User implements UserInterface
      */
     private $admin;
 
-    /**
-     * @var Collection
-     * @ORM\OneToMany(targetEntity="Bid" ,mappedBy="user")
-     */
-    private $bids;
 
-    /**
-     * @return Collection
-     */
-    public function getBids(): Collection
-    {
-        return $this->bids;
-    }
+
 
     public function __construct()
     {
-        $this->bids = new ArrayCollection();
+
         $this->setRoles(['ROLE_USER']);
     }
 
-    /**
-     * @return bool
-     */
-    public function isAdmin(): bool
-    {
-        return $this->admin;
-    }
 
-    /**
-     * @param bool $isAdmin
-     */
-    public function setIsAdmin(): void
-    {
-        $this->admin = false;
-    }
+
+
 
     /**
      * Get id

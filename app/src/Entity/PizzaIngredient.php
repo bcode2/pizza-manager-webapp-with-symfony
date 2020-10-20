@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Pizza
+ * PizzaIngredient
  * @ORM\Entity
  * @ORM\Table(name="pizzaIngredient")
  * @ORM\Entity(repositoryClass="App\Repository\PizzaIngredientRepository")
@@ -23,12 +23,12 @@ class PizzaIngredient
     private $id;
 
     /**
-     * @ORM\Column(name="order",type="integer")
+     * @ORM\Column(name="ingredientOrder",type="integer")
      */
-    private $order;
+    private $ingredientOrder;
 
     /**
-     * @var pizza
+     * @var Pizza
      * @ORM\ManyToOne(targetEntity="Pizza")
      */
     private $pizza;
@@ -50,31 +50,31 @@ class PizzaIngredient
     /**
      * @return mixed
      */
-    public function getOrder()
+    public function getIngredientOrder()
     {
-        return $this->order;
+        return $this->ingredientOrder;
     }
 
     /**
-     * @param mixed $order
+     * @param mixed $ingredientOrder
      */
-    public function setOrder($order): void
+    public function setOrder($ingredientOrder): void
     {
-        $this->order = $order;
+        $this->ingredientOrder = $ingredientOrder;
     }
 
     /**
-     * @return pizza
+     * @return Pizza
      */
-    public function getPizza(): pizza
+    public function getPizza(): Pizza
     {
         return $this->pizza;
     }
 
     /**
-     * @param pizza $pizza
+     * @param Pizza $pizza
      */
-    public function setPizza(pizza $pizza): void
+    public function setPizza(Pizza $pizza): void
     {
         $this->pizza = $pizza;
     }

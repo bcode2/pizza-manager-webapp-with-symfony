@@ -66,9 +66,9 @@ class Ingredient
      *
      * @param string $name
      *
-     * @return Pizza
+     * @return Ingredient
      */
-    public function setName(string $name): Pizza
+    public function setName(string $name): Ingredient
     {
         $this->name = $name;
 
