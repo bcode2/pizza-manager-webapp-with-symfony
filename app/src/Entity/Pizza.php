@@ -36,6 +36,8 @@ class Pizza
      */
     private $pizzaIngredients;
 
+    private $price;
+
     /**
      * @return PizzaIngredient[]|Collection
      */
@@ -98,6 +100,11 @@ class Pizza
      */
     public function getPrice(): ?int
     {
-       return $price=0;
+        $price=0;
+        foreach ($this->getPizzaIngredients() as $ingredient){
+            $price+=$ingredient->getIngredient()->getPrice();
+        }
+
+       return $price;
     }
 }

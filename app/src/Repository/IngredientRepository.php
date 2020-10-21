@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Ingredient;
+
 /**
  * IngredientRepository
  *
@@ -10,4 +12,24 @@ namespace App\Repository;
  */
 class IngredientRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * @param array $ids
+     * @return Ingredient[]
+     */
+    public function findByExcludedIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $queryBuilder = $this->createQueryBuilder('ingredient');
+
+        $query = $queryBuilder->where($queryBuilder->expr()->notIn('ingredient.id', $ids))
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+
 }

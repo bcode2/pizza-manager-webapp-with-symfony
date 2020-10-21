@@ -1,4 +1,7 @@
 {
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99"
     },
@@ -101,6 +104,9 @@
     },
     "fzaninotto/faker": {
         "version": "v1.9.1"
+    },
+    "gedmo/doctrine-extensions": {
+        "version": "v3.0.0"
     },
     "monolog/monolog": {
         "version": "1.25.5"
@@ -505,6 +511,9 @@
         "version": "v4.4.15"
     },
     "twig/extra-bundle": {
+        "version": "v3.0.5"
+    },
+    "twig/intl-extra": {
         "version": "v3.0.5"
     },
     "twig/twig": {

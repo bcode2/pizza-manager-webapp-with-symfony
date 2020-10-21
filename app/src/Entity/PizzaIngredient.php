@@ -58,7 +58,7 @@ class PizzaIngredient
     /**
      * @param mixed $ingredientOrder
      */
-    public function setOrder($ingredientOrder): void
+    public function setIngredientOrder($ingredientOrder): void
     {
         $this->ingredientOrder = $ingredientOrder;
     }

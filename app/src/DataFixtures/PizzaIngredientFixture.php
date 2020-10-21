@@ -21,6 +21,7 @@ class PizzaIngredientFixture extends BaseFixture implements DependentFixtureInte
                 $ingredientReferences[] = $key;
             }
         }
+
         foreach ($pizzaReferences as $index => $pizza) {
             $order = 0;
             $ramdomIngredients = array_rand(array_flip($ingredientReferences), 5);

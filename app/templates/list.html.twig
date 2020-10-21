@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="width:80%;margin: 40px auto 40px auto;text-align:center;background: white;">
+        <div>
+            <h1 style="display: inline-block">Pizzas List</h1>
+        </div>
+        <div>
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success  alert-dismissible fade show" role="alert">
+                    <strong> {{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        <table class="table table-hover text-center">
+            <thead>
+            <tr>
+                <th class="text-center">Id</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pizza in pizzas %}
+                <tr>
+                    <td class="align-middle">
+                        <div style="border: 1px solid gray; min-width: 50px ;border-radius: 50%;background-color: cornflowerblue ;color: white;font-weight: bold">
+                            <a
+                                    style="color: white" href="{{ path('pizza_list', { 'id': pizza.id }) }}"
+                                    style="font-weight: bold">{{ pizza.id }}</a></div>
+                    </td>
+                    <td><strong>{{ pizza.name |upper }}</strong></td>
+                    <td>{{ pizza.price|format_currency('EUR', locale='de') }}</td>
+                    <td>
+                        <ul class="text-left" style="display:inline;">
+                                <li style="display:inline;">
+                                    <a href="{{ path('pizza_edit', { 'id': pizza.id }) }}">
+                                        <img style="max-width: 20px;" alt="editar" src="{{ 'img/editicon.svg' }}">
+                                    </a>
+                                </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
