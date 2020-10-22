@@ -16,3 +16,8 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            Sortable:
+              type: annotation
+              alias: Gedmo
+              prefix: Gedmo\Sortable\Entity
+              dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/src/Sortable/Entity"

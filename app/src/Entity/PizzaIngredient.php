@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Mapping\Annotation\Sortable;
+
 
 /**
  * PizzaIngredient
@@ -23,12 +26,14 @@ class PizzaIngredient
     private $id;
 
     /**
+     * @Gedmo\SortablePosition
      * @ORM\Column(name="ingredientOrder",type="integer")
      */
     private $ingredientOrder;
 
     /**
      * @var Pizza
+     * @Gedmo\SortableGroup
      * @ORM\ManyToOne(targetEntity="Pizza")
      */
     private $pizza;

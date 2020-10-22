@@ -29,7 +29,7 @@ class PizzaIngredientFixture extends BaseFixture implements DependentFixtureInte
             for ($i = 0; $i < 5; $i++) {
                 $pizzaIngredient = new PizzaIngredient();
                 $pizzaIngredient->setPizza($this->referenceRepository->getReference($pizzaReferences[$index]));
-                $pizzaIngredient->setOrder($order++);
+                $pizzaIngredient->setIngredientOrder($order++);
                 $ingredient = $this->referenceRepository->getReference($ramdomIngredients[$i]);
                 $pizzaIngredient->setIngredient($ingredient);
 

@@ -141,7 +141,7 @@ class PizzaController extends AbstractController
         $pizzaIngredient=new PizzaIngredient();
         $pizzaIngredient->setPizza($pizza);
         $pizzaIngredient->setIngredient($ingredient);
-        $pizzaIngredient->setIngredientOrder(2);
+       // $pizzaIngredient->setIngredientOrder(2);
 
         $pizzaService->getEntityManager()->persist($pizzaIngredient);
         $pizzaService->getEntityManager()->flush();

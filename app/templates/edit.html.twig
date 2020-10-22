@@ -1,36 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div style="max-width:500px;margin: 40px auto 40px auto;text-align:center;padding: 0 200px 0 200px;background: white;">
-        <h3>EDICIÓN DE LA PIZZA</h3>
-        <div>
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success  alert-dismissible fade show" role="alert">
-                    <strong> {{ message }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        </div>
-        {{ form_start(edit_form) }}
-        {{ form_end(edit_form) }}
-
-        <ul style="text-align: left; list-style: none">
-            {% for  pizzaIngredient in pizza.pizzaIngredients %}
-                <li>
-                    <a  href="{{ path('pizza_ingredient_delete', { 'id': pizzaIngredient.id }) }}"><img style="max-width: 20px;" alt="delete" src="{{ '/public/img/deleteicon.svg' }}"></a>
-                    {{ pizzaIngredient.ingredient.name }}
-                </li>
-            {% endfor %}
-        </ul>
-        {{ form_start(addNewIngredientForm,{'action': path('pizza_ingredient_add'), 'method': 'POST'}) }}
-        {{ form_end(addNewIngredientForm) }}
-
-        <a href="{{ path('pizza_list') }}">
-            <button type="button" class="btn btn-primary btn-lg btn-block" style="margin: 10px 0;">Regresar al
-                listado
-            </button>
-        </a>
+<div style="max-width:500px;margin: 40px auto 40px auto;text-align:center;padding: 0 200px 0 200px;background: white;">
+    <h3>EDICIÓN DE LA PIZZA</h3>
+    <div>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success  alert-dismissible fade show" role="alert">
+                <strong> {{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
     </div>
+    {{ form_start(edit_form) }}
+    {{ form_end(edit_form) }}
+
+    <ul style="text-align: left; list-style: none">
+        {% for  pizzaIngredient in pizza.pizzaIngredients %}
+            <li>
+                <a href="{{ path('pizza_ingredient_delete', { 'id': pizzaIngredient.id }) }}"><img
+                            style="max-width: 20px;" alt="delete" src="{{ '/public/img/deleteicon.svg' }}"></a>
+                {{ pizzaIngredient.ingredient.name }}
+            </li>
+        {% endfor %}
+    </ul>
+    {{ form_start(addNewIngredientForm,{'action': path('pizza_ingredient_add'), 'method': 'POST'}) }}
+    {{ form_end(addNewIngredientForm) }}
+
+    <a href="{{ path('pizza_list') }}">
+        <button type="button" class="btn btn-primary btn-lg btn-block" style="margin: 10px 0;">Regresar al
+            listado
+        </button>
+    </a>
+</div>
+<div>
+
+    <table class="sortable">
+        <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Id</th>
+            <th>Sort</th>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>{% for pizzaIngredient in pizza.pizzaIngredients %}
+        <tr draggable="true" rel="{{ pizzaIngredient.id }}">
+            <td><i class="fa fa-arrows"></i></td>
+            <td>
+                <a href="{{ path('pizza_edit', { 'id': pizzaIngredient.id }) }}">{{ pizzaIngredient.id }}</a>
+            </td>
+            <td>{{ pizzaIngredient.ingredientOrder }}</td>
+            <td>{{ pizzaIngredient.ingredient.name }}</td>
+        </tr>{% endfor %}</tbody>
+    </table>
+</div>
 {% endblock %}
