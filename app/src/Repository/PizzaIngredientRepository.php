@@ -10,4 +10,9 @@ namespace App\Repository;
  */
 class PizzaIngredientRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function findAll( array $orderBy = null )
+    {
+        return $this->findBy([], ['ingredientOrder' => 'ASC']);
+    }
 }

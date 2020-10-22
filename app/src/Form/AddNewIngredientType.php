@@ -15,25 +15,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AddNewIngredientType extends AbstractType
 {
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        // dump(            $options['data']['ingredients']);die();
         $builder->add(
             'IngredientId',
             ChoiceType::class,
             [
-                'label' => "Ingredient ",
+                'label' => ".",
                 'multiple' => false,
                 'mapped' => false,
                 'placeholder' => false,
-                'choices' =>  $options['data']['ingredients']
-                ]
-            ) ->add(
+                'choices' => $options['data']['ingredients'],
+                'attr' => [
+                    'style' => 'display:inline-block',
+                ],
+            ]
+        )->add(
             'pizzaId',
             HiddenType::class,
             [
@@ -43,7 +43,7 @@ class AddNewIngredientType extends AbstractType
             'Add',
             SubmitType::class,
             [
-                'label' => ''
+                'label' => 'Add',
             ]
         );
     }
@@ -53,7 +53,6 @@ class AddNewIngredientType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-     //   $resolver->setDefaults(['postedBy' => null]);
     }
 
     /**

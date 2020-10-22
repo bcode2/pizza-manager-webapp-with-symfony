@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -62,6 +60,16 @@ class Ingredient
     }
 
     /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
      * Set name.
      *
      * @param string $name
@@ -73,15 +81,5 @@ class Ingredient
         $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
     }
 }

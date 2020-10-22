@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Entity\Ingredient;
 use App\Entity\Pizza;
 use App\Entity\PizzaIngredient;
-use App\Repository\IngredientRepository;
 use App\Repository\PizzaIngredientRepository;
 use App\Repository\PizzaRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,8 +13,8 @@ use Doctrine\Persistence\ObjectRepository;
 class PizzaService extends AbstractEntityService
 
 {
-    private $repository;
     protected $em;
+    private $repository;
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -32,6 +31,14 @@ class PizzaService extends AbstractEntityService
     }
 
     /**
+     * @return PizzaRepository|ObjectRepository
+     */
+    public function getPizzaRepository(): ObjectRepository
+    {
+        return $this->getEntityManager()->getRepository(Pizza::class);
+    }
+
+    /**
      * @param $id
      *
      * @return Pizza|object|null
@@ -40,7 +47,6 @@ class PizzaService extends AbstractEntityService
     {
         return $this->getPizzaRepository()->find($id);
     }
-
 
     public function create(Pizza $pizza): int
     {
@@ -85,23 +91,6 @@ class PizzaService extends AbstractEntityService
     }
 
     /**
-     * @return PizzaRepository|ObjectRepository
-     */
-    public function getPizzaRepository(): ObjectRepository
-    {
-        return $this->getEntityManager()->getRepository(Pizza::class);
-    }
-
-    /**
-     * @return PizzaIngredientRepository|ObjectRepository
-     */
-    public function getPizzaIngredientRepository(): ObjectRepository
-    {
-        return $this->getEntityManager()->getRepository(PizzaIngredient::class);
-    }
-
-
-    /**
      * @return PizzaIngredientRepository|ObjectRepository
      */
     public function getIngredientRepository(): ObjectRepository
@@ -119,9 +108,23 @@ class PizzaService extends AbstractEntityService
         return $this->getEntityManager()->getRepository(Ingredient::class)->findByExcludedIds($ids);
     }
 
-
     public function getRepository()
     {
         // TODO: Implement getRepository() method.
+    }
+
+    public function updatePizzaIngredientPosition(int $pizzaIngredientId, int $position)
+    {
+        $pizzaIngredient = $this->getPizzaIngredientRepository()->find($pizzaIngredientId);
+        $pizzaIngredient->setIngredientOrder($position);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return PizzaIngredientRepository|ObjectRepository
+     */
+    public function getPizzaIngredientRepository(): ObjectRepository
+    {
+        return $this->getEntityManager()->getRepository(PizzaIngredient::class);
     }
 }

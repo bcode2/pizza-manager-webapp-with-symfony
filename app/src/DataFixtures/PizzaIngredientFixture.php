@@ -14,7 +14,6 @@ class PizzaIngredientFixture extends BaseFixture implements DependentFixtureInte
         $ingredientReferences = [];
 
         foreach ($this->referenceRepository->getReferences() as $key => $ref) {
-
             if (strpos($key, 'Pizza_') > 0) {
                 $pizzaReferences[] = $key;
             } else {
@@ -32,7 +31,6 @@ class PizzaIngredientFixture extends BaseFixture implements DependentFixtureInte
                 $pizzaIngredient->setIngredientOrder($order++);
                 $ingredient = $this->referenceRepository->getReference($ramdomIngredients[$i]);
                 $pizzaIngredient->setIngredient($ingredient);
-
                 $manager->persist($pizzaIngredient);
             }
             $manager->persist($pizzaIngredient);

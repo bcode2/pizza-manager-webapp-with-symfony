@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 
 /**
  * Pizza
@@ -33,26 +34,11 @@ class Pizza
     /**
      * @var Collection|PizzaIngredient[]
      * @ORM\OneToMany(targetEntity="PizzaIngredient", mappedBy="pizza", cascade={"persist", "remove"})
+     * @OrderBy({"ingredientOrder" = "ASC"})
      */
     private $pizzaIngredients;
 
     private $price;
-
-    /**
-     * @return PizzaIngredient[]|Collection
-     */
-    public function getPizzaIngredients()
-    {
-        return $this->pizzaIngredients;
-    }
-
-    /**
-     * @param PizzaIngredient[]|Collection $pizzaIngredients
-     */
-    public function setPizzaIngredients($pizzaIngredients): void
-    {
-        $this->pizzaIngredients = $pizzaIngredients;
-    }
 
     public function __construct()
     {
@@ -70,6 +56,16 @@ class Pizza
     }
 
     /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
      * Set name.
      *
      * @param string $name
@@ -84,27 +80,33 @@ class Pizza
     }
 
     /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
      * Get price.
      *
      * @return int
      */
     public function getPrice(): ?int
     {
-        $price=0;
-        foreach ($this->getPizzaIngredients() as $ingredient){
-            $price+=$ingredient->getIngredient()->getPrice();
+        $price = 0;
+        foreach ($this->getPizzaIngredients() as $ingredient) {
+            $price += $ingredient->getIngredient()->getPrice();
         }
 
-       return $price;
+        return $price * 1.5;
+    }
+
+    /**
+     * @return PizzaIngredient[]|Collection
+     */
+    public function getPizzaIngredients()
+    {
+        return $this->pizzaIngredients;
+    }
+
+    /**
+     * @param PizzaIngredient[]|Collection $pizzaIngredients
+     */
+    public function setPizzaIngredients($pizzaIngredients): void
+    {
+        $this->pizzaIngredients = $pizzaIngredients;
     }
 }

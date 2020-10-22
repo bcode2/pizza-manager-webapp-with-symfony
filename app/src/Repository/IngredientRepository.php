@@ -30,6 +30,4 @@ class IngredientRepository extends \Doctrine\ORM\EntityRepository
 
         return $query->getResult();
     }
-
-
 }

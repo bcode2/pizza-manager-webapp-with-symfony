@@ -1,59 +1,92 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div style="max-width:500px;margin: 40px auto 40px auto;text-align:center;padding: 0 200px 0 200px;background: white;">
-    <h3>EDICIÓN DE LA PIZZA</h3>
-    <div>
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success  alert-dismissible fade show" role="alert">
-                <strong> {{ message }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div style="max-width:800px;margin: 20px auto 20px auto;text-align:center;padding: 0 50px 0 50px;background: white;">
+        <h3>EDIT THE PIZZA</h3>
+        <div>
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success  alert-dismissible fade show" role="alert">
+                    <strong> {{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        {{ form_start(edit_form) }}
+        {{ form_end(edit_form) }}
+        <div style="margin: 20px; ">
+            <div style="margin: auto; display: inline-block;padding: 20px">
+
+                <ul id="sortable" style="text-align: left ;list-style: none">
+                    {% for pizzaIngredient in pizza.pizzaIngredients %}
+                        <li id="{{ pizzaIngredient.id }}" draggable="true" class="ui-state-default"
+                            rel="{{ pizzaIngredient.id }} "
+                            style="margin: 10px;background-color: #6897BB;font-weight:500;color:white;padding: 5px">
+
+                            <a href="{{ path('pizza_ingredient_delete', { 'id': pizzaIngredient.id }) }}"><img
+                                        style="max-width: 20px;" alt="delete" src="{{ '/public/img/deleteicon.svg' }}"></a>
+
+                            {{ pizzaIngredient.ingredient.name }}
+                            {{ pizzaIngredient.ingredientOrder }}
+                        </li>
+                        </tr>{% endfor %}
+                </ul>
+                {# <table >
+
+                    <tbody id="sortable" class="sortable">
+                    {% for pizzaIngredient in pizza.pizzaIngredients %}
+                    <tr draggable="true" rel="{{ pizzaIngredient.id }}">
+                        <td><i class="fa fa-arrows"></i></td>
+                        <td style="text-align: left">
+                            <a href="{{ path('pizza_ingredient_delete', { 'id': pizzaIngredient.id }) }}"><img
+                                        style="max-width: 20px;" alt="delete" src="{{ '/public/img/deleteicon.svg' }}"></a>
+
+                        </td>
+                        <td style="text-align: left">{{ pizzaIngredient.ingredient.name }}</td>
+                        <td style="text-align: center">{{ pizzaIngredient.ingredientOrder }}</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table> #}
             </div>
-        {% endfor %}
+            <div id="parentDiv" style="display: inline-block; vertical-align: top;padding: 20px">
+                {{ form_start(addNewIngredientForm,{'action': path('pizza_ingredient_add'), 'method': 'POST'}) }}
+                <div class="flex" style=" display: flex; flex-direction: row;">
+                    <div class="col">  {{ form_row(addNewIngredientForm.IngredientId) }} </div>
+                    <div style="padding: 0 10px ">  {{ form_row(addNewIngredientForm.Add) }}  </div>
+                </div>
+                <div class="col">  {{ form_row(addNewIngredientForm.pizzaId) }} </div>
+                {{ form_end(addNewIngredientForm) }}
+            </div>
+        </div>
+        <a href="{{ path('pizza_list') }}">
+            <button type="button" class="btn btn-primary btn-lg btn-block" style="margin: 10px 0;">Return to the list
+            </button>
+        </a>
     </div>
-    {{ form_start(edit_form) }}
-    {{ form_end(edit_form) }}
-
-    <ul style="text-align: left; list-style: none">
-        {% for  pizzaIngredient in pizza.pizzaIngredients %}
-            <li>
-                <a href="{{ path('pizza_ingredient_delete', { 'id': pizzaIngredient.id }) }}"><img
-                            style="max-width: 20px;" alt="delete" src="{{ '/public/img/deleteicon.svg' }}"></a>
-                {{ pizzaIngredient.ingredient.name }}
-            </li>
-        {% endfor %}
-    </ul>
-    {{ form_start(addNewIngredientForm,{'action': path('pizza_ingredient_add'), 'method': 'POST'}) }}
-    {{ form_end(addNewIngredientForm) }}
-
-    <a href="{{ path('pizza_list') }}">
-        <button type="button" class="btn btn-primary btn-lg btn-block" style="margin: 10px 0;">Regresar al
-            listado
-        </button>
-    </a>
-</div>
-<div>
-
-    <table class="sortable">
-        <thead>
-        <tr>
-            <th>&nbsp;</th>
-            <th>Id</th>
-            <th>Sort</th>
-            <th>Title</th>
-        </tr>
-        </thead>
-        <tbody>{% for pizzaIngredient in pizza.pizzaIngredients %}
-        <tr draggable="true" rel="{{ pizzaIngredient.id }}">
-            <td><i class="fa fa-arrows"></i></td>
-            <td>
-                <a href="{{ path('pizza_edit', { 'id': pizzaIngredient.id }) }}">{{ pizzaIngredient.id }}</a>
-            </td>
-            <td>{{ pizzaIngredient.ingredientOrder }}</td>
-            <td>{{ pizzaIngredient.ingredient.name }}</td>
-        </tr>{% endfor %}</tbody>
-    </table>
-</div>
+    <script>
+        $('#sortable').sortable(
+            {
+                stop: function (event, ui) {
+                    var element_dd = ui.item.attr('data-id');
+                    position = ui.item.index(),
+                        link = '/public/update-ingredient-position';
+                    var element_id = ui.item.attr('id');
+                    pizzaId = $('app_pizza_id').val();
+                    $.ajax({
+                               type: "POST",
+                               url: link,
+                               data: {
+                                   'position': position,
+                                   'pizzaIngredientId': element_id
+                               },
+                               success: function (result) {
+                                   console.log(result);
+                               },
+                               error: function (error) {
+                               }
+                           });
+                }
+            });
+    </script>
 {% endblock %}

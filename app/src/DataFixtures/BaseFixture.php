@@ -44,6 +44,7 @@ abstract class BaseFixture extends Fixture
                 }
             }
         }
+
         if (empty($this->referencesIndex[$className])) {
             throw new \Exception(sprintf('Cannot find any references for class "%s"', $className));
         }

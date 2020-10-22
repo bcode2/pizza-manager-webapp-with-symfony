@@ -8,13 +8,14 @@ use App\Form\AddNewIngredientType;
 use App\Form\PizzaType;
 use App\Services\PizzaService;
 use AppBundle\Provider\Model\MessageList;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 /**
  * Pizza controller.
@@ -35,8 +36,6 @@ class PizzaController extends AbstractController
     {
         $pizzas = $pizzaService->getAll();
 
-        //var_dump($pizzas[0]);
-
         return $this->render(
             'list.html.twig',
             [
@@ -46,7 +45,7 @@ class PizzaController extends AbstractController
     }
 
     /**
-     * Displays a form to edit an existing Asset entity.
+     * Displays a form to edit an existing Pizza entity.
      *
      * @Route("/{id}/edit", name="pizza_edit")
      * @ParamConverter("pizza", class=Pizza::class, options={"mapping":{"id": "id"}})
@@ -58,8 +57,9 @@ class PizzaController extends AbstractController
      */
     public function editAction(Request $request, Pizza $pizza, PizzaService $pizzaService)
     {
+        $pizzaIngredientIds = [];
+        $ingredients = [];
         $editForm = $this->createForm(PizzaType::class, $pizza);
-
         $editForm->handleRequest($request);
 
         foreach ($pizza->getPizzaIngredients() as $ingredient) {
@@ -72,7 +72,6 @@ class PizzaController extends AbstractController
             $ingredients[$ingredient->getName()] = $ingredient->getId();
         }
 
-        //dump($this->generateUrl('pizza_ingredient_add'));die();
         $addNewIngredientForm = $this->createForm(
             AddNewIngredientType::class,
             [
@@ -85,7 +84,6 @@ class PizzaController extends AbstractController
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $pizzaService->update();
-            $this->addFlash('success', "Pizza's ingredient has been updated");
 
             return $this->redirectToRoute('pizza_edit', ['id' => $pizza->getId()]);
         }
@@ -102,7 +100,7 @@ class PizzaController extends AbstractController
     }
 
     /**
-     * Displays a form to edit an existing Asset entity.
+     * Displays a form to delete a pizza ingredient.
      *
      * @Route("/{id}/delete-ingredient", name="pizza_ingredient_delete")
      * @ParamConverter("pizzaIngredient", class=PizzaIngredient::class, options={"mapping":{"id": "id"}})
@@ -129,24 +127,41 @@ class PizzaController extends AbstractController
      */
     public function addIngredientAction(Request $request, PizzaService $pizzaService)
     {
-        dump($request->request);
-        dump($request->request->get('new_pizza_ingredient')['pizzaId']);
-        dump($request->request->get('pizzaId'));
+        $pizza = $pizzaService->findOneById(
+            $request->request->get('new_pizza_ingredient')['pizzaId']
+        );
+        $ingredient = $pizzaService->getIngredientRepository()->findOneById(
+            $request->request->get('new_pizza_ingredient')['IngredientId']
+        );
 
-       // die();
-        $pizza = $pizzaService->findOneById($request->request->get('new_pizza_ingredient')['pizzaId']);
-        $ingredient = $pizzaService->getIngredientRepository()->findOneById($request->request->get('new_pizza_ingredient')['IngredientId']);
-        dump($ingredient);
-      //  die();
-        $pizzaIngredient=new PizzaIngredient();
+        $pizzaIngredient = new PizzaIngredient();
         $pizzaIngredient->setPizza($pizza);
         $pizzaIngredient->setIngredient($ingredient);
-       // $pizzaIngredient->setIngredientOrder(2);
-
         $pizzaService->getEntityManager()->persist($pizzaIngredient);
         $pizzaService->getEntityManager()->flush();
-      //  $pizza = $pizzaService->deletePizzaIngredient($pizzaIngredient);        dump($request);        die();
 
         return $this->redirect($request->headers->get('referer'));
+    }
+
+    /**
+     *
+     * @Route("/update-ingredient-position", name="pizza_ingredient_update_position")
+     * @param Request $request
+     * @param PizzaService $pizzaService
+     *
+     * @return RedirectResponse|Response
+     */
+    public function updateIngredientPositionAction(Request $request, PizzaService $pizzaService)
+    {
+        $ingredientId = $request->get('pizzaIngredientId');
+        $position = $request->get('position');
+
+        try {
+            $pizzaService->updatePizzaIngredientPosition($ingredientId, $position);
+
+            return new jsonresponse(true);
+        } catch (Exception $e) {
+            return new jsonresponse(false);
+        }
     }
 }
