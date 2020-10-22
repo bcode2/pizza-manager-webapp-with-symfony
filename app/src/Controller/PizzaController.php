@@ -108,9 +108,9 @@ class PizzaController extends AbstractController
      * @param PizzaIngredient $pizzaIngredient
      * @param PizzaService $pizzaService
      *
-     * @return JsonResponse
+     * @return RedirectResponse|Response
      */
-    public function deleteIngredientAction(Request $request, PizzaIngredient $pizzaIngredient, PizzaService $pizzaService): JsonResponse
+    public function deleteIngredientAction(Request $request, PizzaIngredient $pizzaIngredient, PizzaService $pizzaService)
     {
         $pizzaService->deletePizzaIngredient($pizzaIngredient);
 
@@ -149,9 +149,9 @@ class PizzaController extends AbstractController
      * @param Request $request
      * @param PizzaService $pizzaService
      *
-     * @return RedirectResponse|Response
+     * @return JsonResponse
      */
-    public function updateIngredientPositionAction(Request $request, PizzaService $pizzaService)
+    public function updateIngredientPositionAction(Request $request, PizzaService $pizzaService):JsonResponse
     {
         $ingredientId = $request->get('pizzaIngredientId');
         $position = $request->get('position');
